@@ -1,29 +1,40 @@
-import './App.css';
+import { useState, useRef } from "react"
 
-function App() {
+const App = () => {
+  const [now, setNow] = useState(null)
+  const [starttime, setStarttime] = useState(null)
+
+  const intervalRef = useRef()
+
+  let seconds = 0.000
+  if (now !== null && starttime !== null) {
+    seconds = (now - starttime) / 1000
+  }
+
+  const startTimer = () => {
+    setStarttime(Date.now())
+    clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => {
+      setNow(Date.now())
+    }, 10)
+  }
+
+  const stopTimer = () => {
+    clearInterval(intervalRef.current)
+  }
+
+  const reset = () => {
+    setNow(null)
+    setStarttime(null)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
-        <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
+    <div>
+      <p>{seconds.toFixed(3)}</p>
+      <button onClick={startTimer}>start</button>
+      <button onClick={stopTimer}>stop</button>
+      <button onClick={reset}>reset</button>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
